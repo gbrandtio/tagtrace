@@ -1,0 +1,40 @@
+# Copy to tagtrace.yaml. Secrets are read from environment variables with ${NAME}.
+
+jira:
+  url: https://jira.example.com
+
+  # Sign in through a browser window, with SSO if your company uses it. The session is saved for later runs.
+  auth: browser
+  browser: chrome             # chrome, msedge or chromium
+
+  # Or sign in with a token. Add email on Jira Cloud. Leave it out on Data Center.
+  # auth: token
+  # token: ${JIRA_TOKEN}
+  # email: me@example.com
+
+  # Which key prefixes count as tickets. Without this list, text like UTF-8 also looks like a ticket key.
+  projects: [ACTXXX]
+  max_comments: 10            # newest comments kept per ticket
+
+ai:
+  # Claude. The key comes from ai.api_key or ANTHROPIC_API_KEY.
+  provider: anthropic
+  model: claude-opus-5-5
+  effort: high                # low, medium, high, xhigh or max
+  refusal_fallback: true      # if Claude declines, Anthropic retries on another model. Claude API only.
+
+  # OpenAI or another hosted service with the same API. base_url and model are required:
+  # provider: openai_compatible
+  # base_url: https://api.openai.com/v1
+  # model: <model name>
+  # api_key: ${OPENAI_API_KEY}
+
+  # A local model (llama.cpp, Ollama, LM Studio). Nothing leaves this machine. base_url and model are required:
+  # provider: openai_compatible
+  # base_url: http://localhost:8080/v1
+  # model: <model name>
+
+  max_input_chars: 400000     # larger components are split into parts. Must be above 0. Use a much lower value for local models.
+  concurrency: 4              # model calls at the same time. Must be above 0.
+  redact: true                # mask sensitive values before they reach a remote model
+  redact_patterns: []         # your own regexes to mask, such as customer IDs
